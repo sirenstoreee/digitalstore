@@ -1,6 +1,7 @@
 import { connection } from "next/server";
 import { adminDb } from "./firebase-admin";
 import { games } from "./games";
+import { preferWebpPath } from "./image-path";
 
 export type StoreCategory = {
   id: string;
@@ -42,7 +43,10 @@ export async function getStoreCategories(): Promise<StoreCategory[]> {
   try {
     const snap = await adminDb().collection("store_categories").get();
     const categories = snap.docs
-      .map((doc) => ({ ...(doc.data() as Omit<StoreCategory, "id">), id: doc.id }))
+      .map((doc) => {
+        const data = doc.data() as Omit<StoreCategory, "id">;
+        return { ...data, image: preferWebpPath(data.image), id: doc.id };
+      })
       .sort((a, b) => a.name.localeCompare(b.name));
     return categories.length ? categories : categoryFallback;
   } catch {

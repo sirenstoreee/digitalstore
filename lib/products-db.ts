@@ -1,5 +1,6 @@
 import { connection } from "next/server";
 import { adminDb } from "./firebase-admin";
+import { preferWebpPath } from "./image-path";
 
 export type DbProduct = {
   recordId: string;
@@ -49,12 +50,17 @@ function toProduct(record: ProductRecord): DbProduct {
     id: record.slug,
     gameId: record.gameId,
     name: record.name,
-    image: record.image ?? "",
+    image: preferWebpPath(record.image),
     description: record.description ?? "",
     price: formatPrice(priceValue),
     priceValue,
     stock: record.stock ?? 0,
-    variants: Array.isArray(record.variants) ? record.variants : [],
+    variants: Array.isArray(record.variants)
+      ? record.variants.map((variant) => ({
+          ...variant,
+          ...(variant.image ? { image: preferWebpPath(variant.image) } : {}),
+        }))
+      : [],
   };
 }
 

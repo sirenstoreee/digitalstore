@@ -27,15 +27,55 @@ function rupiah(value: number) {
   return `Rp ${value.toLocaleString("id-ID")}`;
 }
 
-function webhookUrl() {
-  const value = process.env.DISCORD_WEBHOOK_URL?.trim() ?? "";
-  return /^https:\/\/(discord\.com|discordapp\.com)\/api\/webhooks\//i.test(value)
-    ? value
-    : "";
+export function isValidDiscordWebhookUrl(value: string) {
+  try {
+    const url = new URL(value);
+    return (
+      url.protocol === "https:" &&
+      (url.hostname === "discord.com" || url.hostname === "discordapp.com") &&
+      url.pathname.startsWith("/api/webhooks/") &&
+      !url.username &&
+      !url.password
+    );
+  } catch {
+    return false;
+  }
 }
 
-export function isDiscordWebhookConfigured() {
-  return Boolean(webhookUrl());
+function environmentWebhookUrl() {
+  const value = process.env.DISCORD_WEBHOOK_URL?.trim() ?? "";
+  return isValidDiscordWebhookUrl(value) ? value : "";
+}
+
+// URL override disimpan di koleksi privat; jangan masukkan ke store_settings
+// karena store_settings dapat dibaca langsung oleh pengunjung toko.
+export async function getDiscordWebhookUrl() {
+  try {
+    const snapshot = await adminDb().collection("private_settings").doc("discord").get();
+    const data = snapshot.data();
+    if (typeof data?.webhookUrl === "string") {
+      const value = data.webhookUrl.trim();
+      return isValidDiscordWebhookUrl(value) ? value : "";
+    }
+  } catch (error) {
+    console.error("Discord webhook setting could not be read.", error);
+  }
+  return environmentWebhookUrl();
+}
+
+export async function saveDiscordWebhookUrl(value: string) {
+  const url = value.trim();
+  if (!isValidDiscordWebhookUrl(url)) {
+    throw new Error("Masukkan URL webhook Discord yang valid dari discord.com atau discordapp.com.");
+  }
+  await adminDb().collection("private_settings").doc("discord").set({
+    webhookUrl: url,
+    updatedAt: new Date().toISOString(),
+  });
+}
+
+export async function isDiscordWebhookConfigured() {
+  return Boolean(await getDiscordWebhookUrl());
 }
 
 function buildPayload(kind: "created" | "paid", order: OrderNotice): DiscordPayload {
@@ -92,7 +132,7 @@ export async function queueDiscordOrderNotice(
   kind: "created" | "paid",
   order: OrderNotice,
 ) {
-  const url = webhookUrl();
+  const url = await getDiscordWebhookUrl();
   const payload = buildPayload(kind, order);
   const eventKey = `${order.orderCode}:${kind}`;
   const ref = eventsCollection().doc(`${order.orderCode}_${kind}`);
@@ -119,6 +159,7 @@ export async function queueDiscordOrderNotice(
           body: JSON.stringify(payload),
           signal: AbortSignal.timeout(8000),
           cache: "no-store",
+          redirect: "error",
         });
         if (!response.ok) throw new Error(`Discord returned HTTP ${response.status}.`);
       } catch (deliveryError) {
@@ -144,6 +185,7 @@ async function deliverDiscordEvent(
       body: JSON.stringify(payload),
       signal: AbortSignal.timeout(8000),
       cache: "no-store",
+      redirect: "error",
     });
     if (!response.ok) throw new Error(`Discord returned HTTP ${response.status}.`);
     await ref.update({
@@ -162,7 +204,7 @@ async function deliverDiscordEvent(
 }
 
 export async function retryDiscordEvents() {
-  const url = webhookUrl();
+  const url = await getDiscordWebhookUrl();
   if (!url) throw new Error("DISCORD_WEBHOOK_URL is not configured.");
   const snap = await eventsCollection()
     .where("state", "in", ["pending", "failed"])
@@ -184,7 +226,7 @@ export async function discordCounts() {
 }
 
 export async function testDiscordWebhook() {
-  const url = webhookUrl();
+  const url = await getDiscordWebhookUrl();
   if (!url) throw new Error("DISCORD_WEBHOOK_URL is not configured.");
   const response = await fetch(url, {
     method: "POST",
@@ -192,6 +234,7 @@ export async function testDiscordWebhook() {
     body: JSON.stringify({ content: "✅ Webhook SIREN OFFICIAL berhasil terhubung." }),
     signal: AbortSignal.timeout(8000),
     cache: "no-store",
+    redirect: "error",
   });
   if (!response.ok) throw new Error(`Discord returned HTTP ${response.status}.`);
 }

@@ -159,6 +159,21 @@ export default function OwnerOrdersPage() {
           OWNER SIREN OFFICIAL
         </p>
         <h1 style={{ margin: "8px 0 20px" }}>Kelola Pesanan</h1>
+        <a
+          href="/"
+          style={{
+            display: "inline-block",
+            padding: "9px 14px",
+            marginBottom: 16,
+            border: "1px solid #343746",
+            borderRadius: 9,
+            color: "#f5f7fb",
+            textDecoration: "none",
+            fontWeight: 700,
+          }}
+        >
+          ← Kembali ke panel owner
+        </a>
 
         {loggedIn === null && <p style={{ color: "#a7a9b5" }}>Memuat...</p>}
 

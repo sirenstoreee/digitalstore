@@ -103,6 +103,7 @@ export default function AdminDashboard() {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
+  const [discordWebhookUrl, setDiscordWebhookUrl] = useState("");
 
   async function loadData() {
     const response = await fetch("/api/admin/data", { credentials: "same-origin", cache: "no-store" });
@@ -291,6 +292,22 @@ export default function AdminDashboard() {
     }
   }
 
+  async function saveDiscordWebhook(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setBusy(true);
+    setError("");
+    try {
+      await post("save-discord-webhook", { webhookUrl: discordWebhookUrl });
+      setDiscordWebhookUrl("");
+      setMessage("Link webhook Discord berhasil disimpan.");
+      await loadData();
+    } catch (reason) {
+      setError(reason instanceof Error ? reason.message : "Link webhook gagal disimpan.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
   const inputStyle: React.CSSProperties = {
     width: "100%", boxSizing: "border-box", border: "1px solid #d8dee8", borderRadius: 8,
     padding: "10px 12px", background: "#fff", color: "#172033", font: "inherit",
@@ -413,7 +430,12 @@ export default function AdminDashboard() {
             <h2 style={{ marginTop: 0 }}>Notifikasi pesanan ke Discord</h2>
             <p style={{ color: "#5f6e83", lineHeight: 1.6 }}>Panel mengirim pemberitahuan saat checkout berhasil dibuat dan saat Midtrans mengonfirmasi pembayaran. Pesan hanya memuat nomor pesanan, rincian produk, nilai, metode, dan status.</p>
             <p><strong>Status:</strong> {data.discord.configured ? <span style={{ color: "#168342" }}>Webhook terkonfigurasi</span> : <span style={{ color: "#b56a00" }}>Belum dikonfigurasi</span>}</p>
-            {!data.discord.configured && <p style={{ background: "#fff8e8", padding: 13, borderRadius: 8, color: "#79520d" }}>Tambahkan <code>DISCORD_WEBHOOK_URL</code> ke konfigurasi server (jangan ke kode publik), lalu restart Next.js. Saya tidak mengubah `.env.local`.</p>}
+            <form onSubmit={saveDiscordWebhook} style={{ display: "grid", gap: 10, margin: "14px 0 18px" }}>
+              <label htmlFor="discord-webhook-url" style={{ fontWeight: 700 }}>Link webhook Discord</label>
+              <input id="discord-webhook-url" type="password" autoComplete="new-password" required value={discordWebhookUrl} onChange={(event) => setDiscordWebhookUrl(event.target.value)} placeholder={data.discord.configured ? "Webhook sudah tersimpan. Tempel link baru untuk menggantinya." : "Tempel link webhook Discord di sini"} style={inputStyle} />
+              <small style={{ color: "#657287", lineHeight: 1.5 }}>Link disimpan di server dan tidak ditampilkan kembali di halaman ini. Jangan bagikan link webhook kepada orang lain.</small>
+              <button style={{ ...buttonStyle, justifySelf: "start" }} disabled={busy}>{busy ? "Menyimpan…" : "Simpan link webhook"}</button>
+            </form>
             <p>Notifikasi tertunda: <strong>{data.discord.pending}</strong> · Gagal: <strong>{data.discord.failed}</strong></p>
             <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}><button style={buttonStyle} disabled={busy || !data.discord.configured} onClick={() => discordAction("test-discord")}>Kirim pesan tes</button><button style={{ ...buttonStyle, background: "#fff", color: "#2879e8", border: "1px solid #b7cceb" }} disabled={busy || !data.discord.configured || (!data.discord.pending && !data.discord.failed)} onClick={() => discordAction("retry-discord")}>Coba ulang notifikasi tertunda</button></div>
           </section>

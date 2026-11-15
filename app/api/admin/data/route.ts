@@ -4,7 +4,9 @@ import { adminDb } from "../../../../lib/firebase-admin";
 import { ensureStoreDefaults, defaultStoreSettings } from "../../../../lib/store-data";
 import {
   discordCounts,
+  isValidDiscordWebhookUrl,
   isDiscordWebhookConfigured,
+  saveDiscordWebhookUrl,
   retryDiscordEvents,
   testDiscordWebhook,
 } from "../../../../lib/discord";
@@ -77,7 +79,7 @@ export async function GET(request: Request) {
         paidOrders: statuses.filter((status) => status === "paid").length,
         lowStock: products.filter((product) => Number(product.stock ?? 0) <= 5).length,
       },
-      discord: { configured: isDiscordWebhookConfigured(), ...discord },
+      discord: { configured: await isDiscordWebhookConfigured(), ...discord },
     });
   } catch (error) {
     console.error("Admin data could not be loaded.", error);
@@ -272,6 +274,15 @@ export async function POST(request: Request) {
     if (body.action === "retry-discord") {
       const attempted = await retryDiscordEvents();
       return Response.json({ attempted });
+    }
+
+    if (body.action === "save-discord-webhook") {
+      const webhookUrl = String(body.webhookUrl ?? "");
+      if (!isValidDiscordWebhookUrl(webhookUrl.trim())) {
+        return jsonError("URL harus berupa link webhook Discord HTTPS yang valid.");
+      }
+      await saveDiscordWebhookUrl(webhookUrl);
+      return Response.json({ ok: true });
     }
 
     if (body.action === "test-discord") {
