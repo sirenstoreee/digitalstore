@@ -28,7 +28,7 @@ function loadImage(source: string): Promise<HTMLImageElement> {
   });
 }
 
-// Hasil crop dikecilkan menjadi 256x256 JPEG (sekitar 20 KB) lalu disimpan di profil.
+// Hasil crop dikecilkan menjadi 256x256 WebP lalu disimpan di profil.
 async function makeCroppedAvatar(
   source: string,
   area: CropArea,
@@ -55,7 +55,11 @@ async function makeCroppedAvatar(
     256,
   );
 
-  return canvas.toDataURL("image/jpeg", 0.85);
+  const webp = canvas.toDataURL("image/webp", 0.85);
+  if (!webp.startsWith("data:image/webp;")) {
+    throw new Error("Browser ini tidak mendukung penyimpanan WEBP. Gunakan browser terbaru.");
+  }
+  return webp;
 }
 
 export default function PengaturanPage() {
@@ -105,7 +109,7 @@ export default function PengaturanPage() {
     if (!file) return;
 
     if (!["image/png", "image/jpeg", "image/webp"].includes(file.type)) {
-      setAvatarMessage("Pilih gambar PNG, JPG, atau WEBP.");
+      setAvatarMessage("Pilih gambar PNG, JPG, atau WEBP. Foto disimpan sebagai WEBP.");
       return;
     }
 
@@ -292,7 +296,7 @@ export default function PengaturanPage() {
 
   if (!buyer) return null;
 
-  const avatarUrl = buyer.avatar || "/image/default-avatar.png";
+  const avatarUrl = buyer.avatar || "/image/default-avatar.webp";
 
   return (
     <main

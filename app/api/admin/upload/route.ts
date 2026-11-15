@@ -31,8 +31,8 @@ export async function POST(request: Request) {
     if (!(file instanceof File) || !file.size) {
       return Response.json({ error: "Pilih gambar terlebih dahulu." }, { status: 400 });
     }
-    if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
-      return Response.json({ error: "Format yang didukung: JPG, PNG, atau WEBP." }, { status: 400 });
+    if (file.type !== "image/webp") {
+      return Response.json({ error: "Gambar harus sudah dikonversi ke WEBP." }, { status: 400 });
     }
     const bytes = Buffer.from(await file.arrayBuffer());
     if (bytes.length > MAX_BYTES) {
