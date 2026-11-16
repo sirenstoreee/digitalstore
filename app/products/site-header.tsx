@@ -43,6 +43,7 @@ export default function SiteHeader() {
 
   return (
     <header
+      className="site-header"
       style={{
         borderBottom: "1px solid #20232d",
         padding: "16px 7%",
@@ -56,9 +57,11 @@ export default function SiteHeader() {
         fontFamily: "Arial, sans-serif",
       }}
     >
-      <a href="/" style={{ color: "#f5f7fb", textDecoration: "none" }}>
+      <a className="site-brand" href="/" style={{ color: "#f5f7fb", textDecoration: "none" }}>
+        <img src="/brand/logothumbnail.webp" alt="Logo Joki Roblox" width={44} height={44} />
+        <span>
         <strong style={{ fontSize: 22, letterSpacing: 1 }}>
-          SIREN <span style={{ color: "#a78bfa" }}>OFFICIAL</span>
+          JOKI <span style={{ color: "#a78bfa" }}>ROBLOX</span>
         </strong>
         <small
           style={{
@@ -71,15 +74,17 @@ export default function SiteHeader() {
         >
           JOKI TERPERCAYA, CEPAT, DAN AMAN 100%
         </small>
+        </span>
       </a>
 
-      <nav style={{ display: "flex", gap: 20, flexWrap: "wrap" }}>
+      <nav className="site-nav" style={{ display: "flex", gap: 20, flexWrap: "wrap" }}>
         <a href="/" style={navLinkStyle}>Beranda</a>
         <a href="/products" style={navLinkStyle}>Semua Produk</a>
         <a href="/contact" style={navLinkStyle}>Hubungi Kami</a>
       </nav>
 
       <form
+        className="site-search"
         action="/products"
         method="get"
         role="search"
@@ -91,7 +96,7 @@ export default function SiteHeader() {
           placeholder="Cari semua produk..."
           aria-label="Cari semua produk"
           style={{
-            width: 190,
+            width: "min(190px, 55vw)",
             padding: 10,
             borderRadius: 8,
             border: "1px solid #343746",
@@ -115,7 +120,7 @@ export default function SiteHeader() {
       </form>
 
       {buyer ? (
-        <details style={{ position: "relative" }}>
+        <details className="site-account" style={{ position: "relative" }}>
           <summary
             aria-label="Menu akun"
             style={{
@@ -188,6 +193,7 @@ export default function SiteHeader() {
         </details>
       ) : (
         <a
+          className="site-account"
           href="/masuk"
           style={{
             display: "inline-block",

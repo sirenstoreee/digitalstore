@@ -146,6 +146,7 @@ export default function OwnerOrdersPage() {
 
   return (
     <main
+      className="owner-orders-main"
       style={{
         minHeight: "100vh",
         background: "#090b10",
@@ -155,8 +156,9 @@ export default function OwnerOrdersPage() {
       }}
     >
       <section style={{ maxWidth: 900, margin: "0 auto" }}>
-        <p style={{ color: "#b9a6ff", letterSpacing: 2, margin: 0 }}>
-          OWNER SIREN OFFICIAL
+        <p style={{ display: "flex", alignItems: "center", gap: 10, color: "#b9a6ff", letterSpacing: 2, margin: 0 }}>
+          <img src="/brand/SU.webp" alt="" width={36} height={36} style={{ objectFit: "contain" }} />
+          ADMIN | SIREN OFFICIAL
         </p>
         <h1 style={{ margin: "8px 0 20px" }}>Kelola Pesanan</h1>
         <a

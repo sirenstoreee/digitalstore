@@ -330,7 +330,7 @@ export default function AdminDashboard() {
     return (
       <main style={{ minHeight: "100vh", display: "grid", placeItems: "center", background: "#f3f5f8", fontFamily: "Arial,sans-serif", padding: 20 }}>
         <form onSubmit={login} style={{ ...cardStyle, width: "min(420px, 100%)", display: "grid", gap: 14 }}>
-          <div style={{ color: "#2879e8", fontWeight: 800, letterSpacing: 1 }}>SIREN OFFICIAL · PANEL SUPERUSER</div>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, color: "#2879e8", fontWeight: 800, letterSpacing: 1 }}><img src="/brand/SU.webp" alt="" width={34} height={34} style={{ objectFit: "contain" }} /> ADMIN · SIREN OFFICIAL</div>
           <h1 style={{ margin: 0, fontSize: 25 }}>Masuk ke pengelolaan toko</h1>
           <p style={{ margin: 0, color: "#617087", lineHeight: 1.5 }}>Masuk dengan akun owner (ADMIN_EMAIL). Panel ini terpisah dari area pembeli.</p>
           <input style={inputStyle} type="email" required placeholder="Email Superuser" value={email} onChange={(event) => setEmail(event.target.value)} />
@@ -348,21 +348,21 @@ export default function AdminDashboard() {
   const tabTitle = nav.find(([id]) => id === tab)?.[1] ?? "Beranda";
 
   return (
-    <div style={{ minHeight: "100vh", display: "grid", gridTemplateColumns: "230px minmax(0,1fr)", background: "#f3f5f8", color: "#172033", fontFamily: "Arial,sans-serif" }}>
-      <aside style={{ background: "#fff", borderRight: "1px solid #e2e6ed", padding: 18, display: "flex", flexDirection: "column", gap: 8 }}>
-        <div style={{ fontSize: 18, fontWeight: 800, padding: "8px 8px 22px" }}>SIREN <span style={{ color: "#2879e8" }}>SUPERUSER</span></div>
-        <a href="/products" onClick={(event) => { event.preventDefault(); const base = window.location.hostname === "admin.localhost" ? "http://localhost:3000" : (process.env.NEXT_PUBLIC_STORE_URL ?? "https://sirenofficial.my.id"); window.open(`${base}/products`, "_blank", "noopener,noreferrer"); }} style={{ textDecoration: "none", borderRadius: 8, padding: "12px 10px", color: "#43516a", fontWeight: 700 }}>Produk ↗</a>
+    <div className="admin-dashboard-shell" style={{ minHeight: "100vh", display: "grid", gridTemplateColumns: "230px minmax(0,1fr)", background: "#f3f5f8", color: "#172033", fontFamily: "Arial,sans-serif" }}>
+      <aside className="admin-sidebar" style={{ background: "#fff", borderRight: "1px solid #e2e6ed", padding: 18, display: "flex", flexDirection: "column", gap: 8 }}>
+        <div className="admin-brand" style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 18, fontWeight: 800, padding: "8px 8px 22px" }}><img src="/brand/SU.webp" alt="" width={38} height={38} style={{ objectFit: "contain" }} /><span>ADMIN</span></div>
+        <a className="admin-store-link" href="/products" onClick={(event) => { event.preventDefault(); const base = window.location.hostname === "admin.localhost" ? "http://localhost:3000" : (process.env.NEXT_PUBLIC_STORE_URL ?? "https://sirenofficial.my.id"); window.open(`${base}/products`, "_blank", "noopener,noreferrer"); }} style={{ textDecoration: "none", borderRadius: 8, padding: "12px 10px", color: "#43516a", fontWeight: 700 }}>Produk ↗</a>
         {nav.map(([id, label]) => (
           <button key={id} onClick={() => { setTab(id); setEditing(null); setError(""); }} style={{ textAlign: "left", border: 0, borderRadius: 8, padding: "12px 10px", background: tab === id ? "#e8f1ff" : "transparent", color: tab === id ? "#1766ce" : "#43516a", fontWeight: 700, cursor: "pointer" }}>{label}</button>
         ))}
         <a href="/admin/pesanan" style={{ textDecoration: "none", borderRadius: 8, padding: "12px 10px", color: "#43516a", fontWeight: 700 }}>Pesanan</a>
-        <a href="/" onClick={(event) => { event.preventDefault(); const base = window.location.hostname === "admin.localhost" ? "http://localhost:3000" : (process.env.NEXT_PUBLIC_STORE_URL ?? "https://sirenofficial.my.id"); window.open(base, "_blank", "noopener,noreferrer"); }} style={{ marginTop: "auto", color: "#43516a", padding: "12px 10px" }}>Lihat toko pembeli ↗</a>
+        <a className="admin-store-link" href="/" onClick={(event) => { event.preventDefault(); const base = window.location.hostname === "admin.localhost" ? "http://localhost:3000" : (process.env.NEXT_PUBLIC_STORE_URL ?? "https://sirenofficial.my.id"); window.open(base, "_blank", "noopener,noreferrer"); }} style={{ marginTop: "auto", color: "#43516a", padding: "12px 10px" }}>Lihat toko pembeli ↗</a>
         <button onClick={logout} style={{ textAlign: "left", border: 0, background: "transparent", padding: "12px 10px", color: "#9b2932", fontWeight: 700, cursor: "pointer" }}>Keluar</button>
       </aside>
 
-      <main style={{ minWidth: 0, padding: "26px clamp(18px, 3vw, 44px) 60px" }}>
+      <main className="admin-main" style={{ minWidth: 0, padding: "26px clamp(18px, 3vw, 44px) 60px" }}>
         <header style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 16, marginBottom: 26 }}>
-          <div><p style={{ margin: "0 0 5px", color: "#718096", fontSize: 13 }}>PANEL TOKO / SUPERUSER</p><h1 style={{ margin: 0, fontSize: 28 }}>{tabTitle}</h1></div>
+          <div><p style={{ margin: "0 0 5px", color: "#718096", fontSize: 13 }}>ADMIN / SIREN OFFICIAL</p><h1 style={{ margin: 0, fontSize: 28 }}>{tabTitle}</h1></div>
           <a href="/" onClick={(event) => { event.preventDefault(); const base = window.location.hostname === "admin.localhost" ? "http://localhost:3000" : (process.env.NEXT_PUBLIC_STORE_URL ?? "https://sirenofficial.my.id"); window.open(base, "_blank", "noopener,noreferrer"); }} style={{ color: "#2879e8" }}>Buka toko</a>
         </header>
         {message && <div style={{ ...cardStyle, padding: 12, marginBottom: 12, color: "#176b3b" }}>{message}<button onClick={() => setMessage("")} style={{ float: "right", border: 0, background: "none", cursor: "pointer" }}>×</button></div>}

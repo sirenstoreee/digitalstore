@@ -31,7 +31,7 @@ export default function ContactPage() {
 
         <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginTop: 20 }}>
           <a
-            href={`https://wa.me/6285176710079?text=${whatsappMessage}`}
+            href={`https://api.whatsapp.com/send/?phone=6285176710079&text=${whatsappMessage}&type=phone_number&app_absent=0`}
             target="_blank"
             rel="noreferrer"
             style={{
@@ -70,7 +70,7 @@ export default function ContactPage() {
           </a>
 
           <a
-            href="https://discord.gg/t3baYHhFUa"
+            href="https://discord.gg/UPh8cEdgsa"
             target="_blank"
             rel="noreferrer"
             style={{

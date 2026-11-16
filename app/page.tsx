@@ -24,6 +24,11 @@ async function HomeContent() {
           {firstLine}{restTitle.length > 0 && <><br /><span style={{ color: settings.accentColor }}>{restTitle.join(" ")}</span></>}
         </h1>
         <p style={{ maxWidth: 540, color: "#a7a9b5", fontSize: 17, lineHeight: 1.7 }}>{settings.heroDescription}</p>
+        <p style={{ maxWidth: 640, color: "#c1c4d0", fontSize: 15, lineHeight: 1.7 }}>
+          Sedang mencari joki Roblox termurah? Bandingkan harga dan detail layanan
+          joki Roblox terpercaya dari Siren Store. Siren Official melayani joki
+          Blox Fruits dan menyediakan item Roblox dengan informasi produk yang jelas.
+        </p>
         <a href="/products" style={{ display: "inline-block", marginTop: 18, background: settings.accentColor, color: "#090b10", borderRadius: 9, padding: "14px 22px", fontWeight: 700, textDecoration: "none" }}>Jelajahi produk →</a>
       </section>
 

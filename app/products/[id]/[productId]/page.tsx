@@ -94,7 +94,7 @@ async function ProductDetail({ params }: ProductDetailProps) {
                 Tanya lewat WhatsApp
               </a>
               <a
-                href="https://discord.gg/t3baYHhFUa"
+                href="https://discord.gg/UPh8cEdgsa"
                 target="_blank"
                 rel="noreferrer"
                 style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 6, minWidth: 0, whiteSpace: "nowrap", padding: "11px 8px", borderRadius: 10, background: "#5865F2", color: "#ffffff", textDecoration: "none", fontWeight: 700, fontSize: 12 }}
