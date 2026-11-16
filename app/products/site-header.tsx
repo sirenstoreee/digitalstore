@@ -58,7 +58,7 @@ export default function SiteHeader() {
       }}
     >
       <a className="site-brand" href="/" style={{ color: "#f5f7fb", textDecoration: "none" }}>
-        <img src="/brand/logothumbnail.webp" alt="Logo Joki Roblox" width={44} height={44} />
+        <img src="/brand/logosk.webp" alt="Logo Siren Store" width={44} height={44} />
         <span>
         <strong style={{ fontSize: 22, letterSpacing: 1 }}>
           JOKI <span style={{ color: "#a78bfa" }}>ROBLOX</span>
