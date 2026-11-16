@@ -3,7 +3,7 @@ import { adminDb } from "./firebase-admin";
 
 type DiscordPayload = {
   content?: string;
-  allowed_mentions?: { users: string[] };
+  allowed_mentions?: { parse?: string[]; users: string[] };
   embeds: {
     title: string;
     description?: string;
@@ -87,8 +87,9 @@ function buildPayload(kind: "created" | "paid", order: OrderNotice): DiscordPayl
   return {
     ...(paid
       ? {
-          content: "<@354657097524445184> 👑",
-          allowed_mentions: { users: ["354657097524445184"] },
+          content: "@everyone <@354657097524445184> 👑",
+          // parse: ["everyone"] mengizinkan @everyone; users mengizinkan tag ke akun owner.
+          allowed_mentions: { parse: ["everyone"], users: ["354657097524445184"] },
         }
       : {}),
     embeds: [
