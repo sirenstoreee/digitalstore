@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     "joki roblox siren official",
     "siren official",
   ],
-  icons: { icon: "/brand/logosk.webp", apple: "/brand/logosk.webp" },
+  icons: { icon: "/brand/thumbnailicon.webp", apple: "/brand/thumbnailicon.webp" },
   openGraph: {
     title: "JOKI ROBLOX | SIREN OFFICIAL",
     description:
